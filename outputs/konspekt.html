@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Конспект ведущего · Пакеты и проекты в Python</title>
+<style>
+:root{color-scheme:light;--ink:#172b40;--muted:#485a6a;--accent:#006b5b;--line:#dce5e3}*{box-sizing:border-box}body{margin:0;background:#f6f6f1;color:var(--ink);font:18px/1.56 system-ui,sans-serif}main{max-width:880px;margin:auto;padding:36px 25px 72px}h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.06;margin:.3em 0}h2{font-size:1.9rem;margin:1.6em 0 .3em}h3{line-height:1.25;margin:.2em 0 .6em}a{color:var(--accent)}nav{position:sticky;top:0;background:#f6f6f1;padding:12px 0;border-bottom:1px solid var(--line);font-size:16px;z-index:1}nav a{display:inline-block;margin-right:1em}article{padding:25px 0 18px;border-top:1px solid var(--line);scroll-margin-top:100px}section{scroll-margin-top:95px}.time{font:bold 14px/1.5 system-ui;color:var(--accent);letter-spacing:.045em;text-transform:uppercase}p{margin:.55em 0 1em}.say{border-left:3px solid #56a99a;padding-left:15px}pre{padding:16px 18px;background:#122338;color:#d3faee;overflow:auto;border-radius:7px;font:16px/1.55 ui-monospace,monospace}code{font-family:ui-monospace,monospace;font-size:.89em}pre code{font-size:inherit}li{margin:.32em 0}details{margin:.8em 0 1.3em;padding:8px 0}summary{cursor:pointer;color:var(--accent);font-weight:650}@media print{nav{display:none}main{padding:0}article{break-inside:avoid}pre{color:#152638;background:#eee;white-space:pre-wrap}}
+</style>
+<main>
+<header><div class="time">Конспект ведущего · 45 минут</div><h1>Пакеты и проекты в Python</h1><p>Аудитория уже умеет запускать простой Python-скрипт. Первые 20 минут — теория, следующие 25 минут — демонстрация, упражнение и вопросы. Время ниже отсчитывается от начала занятия.</p></header>
+<nav aria-label="Навигация"><a href="#prep">Подготовка</a><a href="#theory">00–20 Теория</a><a href="#practice">20–38 Демо</a><a href="#exercise">38–45 Упражнение</a><a href="#fallback">Запасной план</a></nav>
+<section id="prep"><h2>Перед звонком</h2>
+<ol>
+<li>Распакуйте <a href="python-packaging-lab.zip">архив практикума</a>. Внутри две папки с одинаковым модулем и разными настройками сборки: <code>uv-flit</code> и <code>poetry</code>. Откройте их в редакторе. Папки лучше использовать отдельно от других Python-проектов и без активированного виртуального окружения.</li>
+<li>Подготовьте Python 3.11 или новее, uv и Poetry 2.x. Выполните <code>uv --version</code> и <code>poetry --version</code>. Для основной части отдельная установка Flit не нужна: uv загрузит <code>flit_core</code> по настройкам проекта. <a href="https://docs.astral.sh/uv/getting-started/installation/">Установка uv</a> · <a href="https://python-poetry.org/docs/#installation">Установка Poetry</a>.</li>
+<li>Пройдите команды со слайдов 08–11 на одной распаковке и сохраните удачный вывод. Для звонка сделайте свежую распаковку, чтобы <code>uv add</code> и <code>poetry add</code> снова создали lock-файлы. Если слушатели будут повторять, заранее отправьте архив и попросите подготовить Python и uv.</li>
+<li>На одном экране откройте слайды, терминал и редактор. Увеличьте шрифт терминала. Конспект оставьте на соседнем экране и проверьте в окне предпросмотра звонка, что он скрыт от участников.</li>
+</ol>
+<p><strong>Темп.</strong> К 20-й минуте откройте терминал. Если отстаёте, покажите Poetry по слайду 11 и сохраните время на упражнение. Если участники работают без терминала, все задания можно выполнить устно через чат.</p>
+</section>
+<section id="theory"><h2>Теоретический блок</h2>
+<article><div class="time">Слайд 01 · 00–03</div><h3>Пакеты и проекты в Python</h3>
+<p class="say">«Сегодня разберёмся, как передать Python-проект коллеге так, чтобы он смог запустить его у себя. Потом сделаем маленькую команду, добавим ей зависимость и соберём пакет, который можно установить».</p>
+<p>Попросите поставить в чат «+», если пользовались <code>pip install</code>. Оставьте 15–20 секунд на ответы. Пакет в контексте установки — единица распространения, которую можно установить. В нашем примере имя пакета и команды — <code>lesson-greet</code>, имя модуля для импорта — <code>lesson_greet</code>.</p></article>
+<article><div class="time">Слайд 02 · 03–06</div><h3>Один проект, два компьютера</h3>
+<p class="say">«Скопировали одни и те же файлы. У меня команда работает, у коллеги ошибка импорта или другая версия библиотеки. Какие сведения ему понадобятся?»</p>
+<p>Дайте чату 30 секунд. Если ответов мало, подскажите: «Что ещё есть на моём компьютере, кроме исходников?» Соберите три ответа: версия Python, список зависимостей и способ получить согласованные версии. Поясните, что виртуальное окружение изолирует установленные библиотеки проекта от других проектов.</p></article>
+<article><div class="time">Слайд 03 · 06–10</div><h3>Что делает пакетный менеджер</h3>
+<p class="say">«Мы используем Rich напрямую. У Rich есть свои зависимости. Менеджер обходит это дерево и подбирает версии так, чтобы их требования были совместимы. Эту часть называют разрешением зависимостей».</p>
+<p>Уточните, что PyPI — индекс, из которого инструменты обычно получают пакеты. <code>pip</code> тоже разрешает и устанавливает зависимости. В практикуме uv и Poetry дополнительно ведут настройки проекта и собственные lock-файлы. Попросите назвать прямую зависимость примера. Ответ — Rich.</p></article>
+<article><div class="time">Слайд 04 · 10–14</div><h3>Что хранит pyproject.toml</h3>
+<p class="say">«TOML — формат конфигурации. В квадратных скобках имя секции. В [project] мы описываем пакет, минимальную версию Python и зависимости. Выражение rich&gt;=13,&lt;15 разрешает версии от 13 включительно до 15 исключительно».</p>
+<p>Укажите на <code>version</code>: это версия нашего пакета. <code>requires-python</code> относится к интерпретатору, <code>dependencies</code> — к библиотекам для запуска. В <code>[build-system]</code> задают способ сборки, в <code>[tool.…]</code> можно встретить настройки конкретных инструментов. Полную конфигурацию увидим в редакторе.</p>
+<p><strong>В чат.</strong> «Подойдёт ли 15.0.0?» Ответ — нет, верхняя граница строгая.</p></article>
+<article><div class="time">Слайд 05 · 14–17</div><h3>Требования, версии и окружение</h3>
+<p class="say">«У требований, решения и установки три разных места. В pyproject.toml мы задаём диапазон. Менеджер выбирает совместимые версии и записывает их в lock-файл. При синхронизации он устанавливает в окружение то, что подходит для этой платформы и версии Python».</p>
+<p>При переносе проекта с uv передайте исходники, <code>pyproject.toml</code> и <code>uv.lock</code>. Новое окружение создаст <code>uv sync --locked</code>. У Poetry свой файл <code>poetry.lock</code>. Poetry может хранить окружение вне папки проекта. У разных платформ могут отличаться установленные пакеты по условиям в lock-файле.</p>
+<p><strong>В чат.</strong> «Если окружение потерялось, что поможет его восстановить?» Ответ — исходники, конфигурация, актуальный lock-файл и подходящий Python.</p></article>
+<article><div class="time">Слайд 06 · 17–20</div><h3>Кто управляет проектом, кто собирает</h3>
+<p class="say">«uv и Poetry решают похожие задачи управления проектом. Flit специализируется на упаковке. В одном проекте uv может вести зависимости и при сборке вызвать flit_core. Такой компонент называют бэкендом сборки».</p>
+<p>Покажите разделение на вопросе «Кто что делает?». uv запускает процесс сборки. Бэкенд читает метаданные и создаёт файлы для распространения. Poetry в примере использует свой бэкенд <code>poetry-core</code>. Переключитесь на редактор и терминал в 20:00.</p></article>
+</section>
+<section id="practice"><h2>Практический блок</h2>
+<article><div class="time">Слайд 07 · 20–23</div><h3>Два файла и одна команда</h3>
+<p>Откройте терминал в распакованной папке <code>uv-flit</code>. Покажите в редакторе <code>lesson_greet.py</code>, затем <code>pyproject.toml</code>. В файле пока <code>dependencies = []</code>, а код уже импортирует Rich.</p>
+<p class="say">«В секции [project.scripts] мы связали имя команды lesson-greet с функцией main из модуля lesson_greet. Когда проект устанавливается в окружение, появляется эта команда».</p>
+<p>Спросите, какой строки не хватает в списке зависимостей, чтобы запустить импорт. После ответов переходите к установке.</p></article>
+<article><div class="time">Слайд 08 · 23–27</div><h3>Добавление Rich, дерево и запуск</h3>
+<pre><code>uv add "rich&gt;=13,&lt;15"
+uv tree
+uv run lesson-greet</code></pre>
+<p>Выполняйте по строке. Кавычки нужны, чтобы терминал передал символы <code>&gt;</code> и <code>&lt;</code> как часть требования. После первой команды покажите обновлённый <code>pyproject.toml</code>, новый <code>uv.lock</code> и <code>.venv</code>. В дереве укажите на Rich и один вложенный пакет. В lock-файле найдите <code>name = "rich"</code> и покажите рядом выбранную версию.</p>
+<p><strong>Ожидаемый результат.</strong> <code>Hello, Python!</code> Цвет зависит от терминала. Номера версий зависят от доступных пакетов.</p></article>
+<article><div class="time">Слайд 09 · 27–30</div><h3>Проверка и синхронизация</h3>
+<pre><code>uv lock --check
+uv sync --locked</code></pre>
+<p class="say">«Первая команда проверяет, актуален ли lock-файл. Вторая приводит окружение в соответствие с ним и завершится ошибкой, если для этого надо обновить lock-файл».</p>
+<p>Спросите, что будет, если вручную дописать новую прямую зависимость в <code>pyproject.toml</code>. Дайте 30 секунд. Для показа временно добавьте <code>"httpx"</code> вторым элементом массива <code>dependencies</code>, сохраните и повторите <code>uv sync --locked</code>. После ожидаемой ошибки отмените правку, сохраните и проверьте <code>uv lock --check</code>. При нехватке времени разберите этот шаг устно.</p></article>
+<article><div class="time">Слайд 10 · 30–34</div><h3>Сборка через Flit</h3>
+<pre><code>uv build</code></pre>
+<p>До запуска укажите на две строки в <code>[build-system]</code>. <code>requires</code> объявляет зависимость, нужную для сборки. <code>build-backend</code> называет Python-модуль бэкенда. uv запускает сборку в изолированном окружении. Откройте <code>dist/</code> в редакторе после завершения.</p>
+<p class="say">«Файл .whl — подготовленный к установке пакет. Файл .tar.gz — исходное распространение, из которого можно собрать wheel. Если другой человек установит наш wheel обычным способом, установщик прочитает требования к Rich из метаданных пакета».</p>
+<details><summary>Если хочется показать команду Flit напрямую</summary><p>В той же папке можно запустить <code>uvx flit build</code>. <code>uvx</code> запустит отдельную команду Flit во временном окружении, при первом запуске понадобится доступ к индексу. Для основной демонстрации хватает <code>uv build</code>.</p></details></article>
+<article><div class="time">Слайд 11 · 34–38</div><h3>Аналогичный цикл с Poetry</h3>
+<p>Откройте новый терминал в соседней папке <code>poetry</code>. Покажите знакомую секцию <code>[project]</code> и другой бэкенд <code>poetry.core.masonry.api</code>.</p>
+<pre><code>poetry add "rich&gt;=13,&lt;15"
+poetry run lesson-greet
+poetry build</code></pre>
+<p>Покажите <code>poetry.lock</code>, строку <code>Hello, Python!</code> и файлы в <code>dist/</code>. Для установки уже описанного проекта можно выполнить <code>poetry install</code>. При наличии актуального <code>poetry.lock</code> Poetry использует его при установке.</p>
+<p><strong>Если останется минута.</strong> Спросите, что в двух вариантах проекта переносится почти без изменений. Ответ — Python-код и стандартные метаданные <code>[project]</code>. У менеджеров свои lock-файлы и команды.</p></article>
+</section>
+<section id="exercise"><h2>Упражнение и закрепление</h2>
+<article><div class="time">Слайд 12 · 38–42</div><h3>Своя строка приветствия</h3>
+<p class="say">«У вас две минуты. Поменяйте текст в lesson_greet.py, сохраните и запустите команду. Кто без терминала, напишите в чат, изменится ли lock-файл, и почему».</p>
+<pre><code>uv run --locked lesson-greet</code></pre>
+<p>Вернитесь в <code>uv-flit</code>. После двух минут покажите один вариант, например <code>Hello, team!</code>. Ответ — lock-файл остаётся прежним, потому что зависимости и их требования сохранились. Команда подхватывает изменение исходника благодаря редактируемой установке проекта. Если нужно передать обновлённый wheel, его собирают заново.</p></article>
+<article><div class="time">Слайд 13 · 42–45</div><h3>Три контрольных вопроса</h3>
+<p>Попросите отправить три коротких ответа одним сообщением. После 30–45 секунд разберите ответы и оставьте последнюю минуту на вопросы.</p>
+<ol><li>Диапазон версий Rich — <code>[project].dependencies</code> в <code>pyproject.toml</code>.</li><li>Выбранные версии — в <code>uv.lock</code> или <code>poetry.lock</code> соответствующего проекта.</li><li>При <code>uv build</code> в примере wheel собирает бэкенд <code>flit_core.buildapi</code>.</li></ol>
+</article>
+</section>
+<section id="fallback"><h2>Если демонстрация остановилась</h2>
+<ul>
+<li><strong>Команда не найдена.</strong> Проверьте <code>uv --version</code> или <code>poetry --version</code>. После установки обычно нужно заново открыть терминал. Для Poetry можно сразу перейти к слайду 11.</li>
+<li><strong>Проект не найден.</strong> Проверьте, что текущая папка содержит <code>pyproject.toml</code>. У двух примеров одинаковые имена файлов, поэтому проверьте и название папки.</li>
+<li><strong>Ошибка Python.</strong> Проект требует 3.11+. Если установлен подходящий интерпретатор, но Poetry выбрала другой, укажите его командой <code>poetry env use</code> с путём к интерпретатору. Для uv можно явно задать <code>--python 3.11</code>, если эта версия доступна.</li>
+<li><strong>Сеть или индекс недоступны.</strong> После одной короткой попытки переключитесь на заранее сохранённый вывод или на слайды 08–11. Покажите исходники и объясните, где появятся новые файлы. Слайд 12 проведите как упражнение в чате.</li>
+</ul>
+<h3>Короткие ответы на возможные вопросы</h3>
+<dl><dt><strong>Почему бы просто не передать .venv?</strong></dt><dd>Окружение связано с конкретной машиной, путями и платформой. Проект и lock-файл позволяют создать новое окружение.</dd><dt><strong>Нужно ли записывать в зависимости всё дерево?</strong></dt><dd>Обычно в требованиях проекта перечисляют библиотеки, на которые он опирается напрямую. Менеджер сам учитывает зависимости этих библиотек.</dd><dt><strong>Можно ли использовать uv и Flit вместе?</strong></dt><dd>Да. В примере uv управляет окружением и зависимостями, а при сборке вызывает бэкенд Flit.</dd><dt><strong>Будет ли установка wheel соблюдать наш uv.lock?</strong></dt><dd>При обычной установке wheel установщик читает требования из метаданных пакета. Для воспроизведения окружения разработки используйте сам проект и его lock-файл.</dd></dl>
+<h3>Официальная документация</h3>
+<ul><li><a href="https://packaging.python.org/en/latest/specifications/pyproject-toml/">PyPA · спецификация pyproject.toml</a></li><li><a href="https://docs.astral.sh/uv/concepts/projects/sync/">uv · lock-файл и синхронизация</a></li><li><a href="https://docs.astral.sh/uv/guides/package/">uv · сборка</a></li><li><a href="https://flit.pypa.io/en/stable/pyproject_toml.html">Flit · настройка бэкенда</a></li><li><a href="https://python-poetry.org/docs/basic-usage/">Poetry · основной рабочий процесс</a></li><li><a href="https://python-poetry.org/docs/pyproject/">Poetry · pyproject.toml</a></li></ul>
+</section>
+</main></html>
